@@ -3,7 +3,7 @@
 
 #include "Character/AuraCharacterBase.h"
 
-AAuraCharacterBase::AAuraCharacterBase(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
+AAuraCharacterBase::AAuraCharacterBase()
 {
 	PrimaryActorTick.bCanEverTick = false;
 

@@ -15,6 +15,7 @@ class MYAURALEARNING_API AAuraCharacter : public AAuraCharacterBase
 	GENERATED_BODY()
 	
 public:
-	AAuraCharacter(const FObjectInitializer& ObjectInitializer);
+	AAuraCharacter();
+	//AAuraCharacter(const FObjectInitializer& ObjectInitializer);
 	
 };

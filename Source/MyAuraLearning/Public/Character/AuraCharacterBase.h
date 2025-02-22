@@ -12,7 +12,8 @@ class MYAURALEARNING_API AAuraCharacterBase : public ACharacter
 	GENERATED_BODY()
 
 public:
-	AAuraCharacterBase(const FObjectInitializer& ObjectInitializer);
+	AAuraCharacterBase();
+	//AAuraCharacterBase(const FObjectInitializer& ObjectInitializer);
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Combat")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
