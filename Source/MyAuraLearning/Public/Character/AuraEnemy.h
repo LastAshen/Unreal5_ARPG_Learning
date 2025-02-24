@@ -17,10 +17,16 @@ class MYAURALEARNING_API AAuraEnemy : public AAuraCharacterBase, public IEnemyIn
 
 public:
 	AAuraEnemy();
-	
+
+	// IEnemyInterface
 	virtual void Highlight() override;
 	virtual void UnHighlight() override;
+	// End IEnemyInterface
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Aura Enemy")
 	bool bIsHighlighted;
+
+protected:
+	virtual void BeginPlay() override;
 };
