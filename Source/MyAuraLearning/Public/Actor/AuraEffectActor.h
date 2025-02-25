@@ -6,9 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "AuraEffectActor.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAuraEffectActorOverlapSignature, AActor*, OtherActor);
 
-class USphereComponent;
+class UGameplayEffect;
 
 UCLASS()
 class MYAURALEARNING_API AAuraEffectActor : public AActor
@@ -18,26 +17,12 @@ class MYAURALEARNING_API AAuraEffectActor : public AActor
 public:	
 	AAuraEffectActor();
 
-	UFUNCTION()
-	virtual void OnOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
-	UFUNCTION()
-	virtual void OnEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
-	
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<UStaticMeshComponent> MeshComponent;
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<USphereComponent> SphereComponent;
-
-	UPROPERTY(BlueprintAssignable)
-	FAuraEffectActorOverlapSignature OnOverlapAction;
-
-	UFUNCTION(BlueprintCallable, Category = "AuraEffectActor")
-	void SetHealth(AActor* SetActor);
-	
-	UFUNCTION(BlueprintCallable, Category = "AuraEffectActor")
-	void SetMana(AActor* SetActor);
-	
 protected:
 	virtual void BeginPlay() override;
+
+	UFUNCTION(BlueprintCallable)
+	void ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGameplayEffect> GameplayEffectClass);
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly,  Category = "Applied Effects")
+	TSubclassOf<UGameplayEffect> InstantGameplayEffect;
 };
