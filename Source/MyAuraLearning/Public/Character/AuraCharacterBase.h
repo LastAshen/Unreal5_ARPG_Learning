@@ -22,7 +22,9 @@ public:
 	//AAuraCharacterBase(const FObjectInitializer& ObjectInitializer);
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
-	UAttributeSet* GetAttributeSetBase() const {return AttributeSet;}
+
+	UFUNCTION(BlueprintCallable)
+	UAttributeSet* GetAttributeSet() const {return AttributeSet;}
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Combat")
 	TObjectPtr<USkeletalMeshComponent> Weapon;

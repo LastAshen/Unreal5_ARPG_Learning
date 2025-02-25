@@ -18,7 +18,7 @@ class MYAURALEARNING_API AAuraPlayerState : public APlayerState, public IAbility
 	GENERATED_BODY()
 	
 public:
-		AAuraPlayerState();
+	AAuraPlayerState();
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UAttributeSet* GetAttributeSet() const {return AttributeSet;}

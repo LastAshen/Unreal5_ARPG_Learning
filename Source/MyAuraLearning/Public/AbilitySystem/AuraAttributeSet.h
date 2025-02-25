@@ -22,6 +22,9 @@ class MYAURALEARNING_API UAuraAttributeSet : public UAttributeSet
 public:
 	UAuraAttributeSet();
 
+	UFUNCTION(BlueprintCallable)
+	void TestSetHealth(float NewHealth);
+	
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_Health , Category="Vital Attributes")
