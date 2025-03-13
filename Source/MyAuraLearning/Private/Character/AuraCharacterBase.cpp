@@ -23,3 +23,25 @@ void AAuraCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
 }
+
+void AAuraCharacterBase::InitAbilityActorInfo()
+{
+}
+
+void AAuraCharacterBase::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> AttributeClass, float Level) const
+{
+	check(GetAbilitySystemComponent());
+	check(AttributeClass);
+	auto ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
+	ContextHandle.AddSourceObject(this);
+	const auto SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(AttributeClass, Level, ContextHandle);
+	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(), GetAbilitySystemComponent());
+}
+
+void AAuraCharacterBase::InitializeDefaultAttributes() const
+{
+	ApplyEffectToSelf(DefaultPrimaryAttributeClass);
+	ApplyEffectToSelf(DefaultSecondaryAttributeClass);
+	ApplyEffectToSelf(DefaultVitalAttributeClass);
+}
+

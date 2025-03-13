@@ -18,10 +18,13 @@ public:
 	AAuraCharacter();
 	//AAuraCharacter(const FObjectInitializer& ObjectInitializer);
 
+	//ICombatInterface
+	virtual int32 GetPlayerLevel() override;
+	//end ICombatInterface
+
 	virtual void PossessedBy(AController* NewController) override;
 
 	virtual void OnRep_PlayerState() override;
-
-	private:
-	void InitAbilityActorInfo();
+	
+	virtual void InitAbilityActorInfo() override;
 };

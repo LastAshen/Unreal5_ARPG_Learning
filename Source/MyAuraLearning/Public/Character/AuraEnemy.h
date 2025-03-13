@@ -1,3 +1,4 @@
+
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
@@ -23,10 +24,17 @@ public:
 	virtual void UnHighlight() override;
 	// End IEnemyInterface
 
+	// ICombatInterface
+	virtual int32 GetPlayerLevel() override;
+	// End ICombatInterface
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Aura Enemy")
 	bool bIsHighlighted;
 
 protected:
 	virtual void BeginPlay() override;
+	virtual void InitAbilityActorInfo() override;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character Class Defaults")
+	int32 Level = 1;
 };
