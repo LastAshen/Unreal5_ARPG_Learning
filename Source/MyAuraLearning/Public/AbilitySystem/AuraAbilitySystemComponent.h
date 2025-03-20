@@ -12,9 +12,17 @@ UCLASS()
 class MYAURALEARNING_API UAuraAbilitySystemComponent : public UAbilitySystemComponent
 {
 	GENERATED_BODY()
+	
 public:
 	void AbilityActorInfoSet();
 	FEffectAssetTags EffectAssetTags;
+	void AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>> AbilityClasses);
+
+	void AbilityInputTagHeld(const FGameplayTag& Tag);
+	void AbilityInputTagReleased(const FGameplayTag& Tag);
+	
 protected:
-	void EffectApplied(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle EffectHandle);
+	
+	UFUNCTION(Client, Reliable)  //用以解决不在客户端执行的问题
+	void ClientEffectApplied(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle EffectHandle);
 };

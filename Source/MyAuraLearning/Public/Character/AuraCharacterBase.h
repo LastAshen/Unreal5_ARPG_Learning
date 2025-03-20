@@ -51,4 +51,40 @@ protected:
 	virtual void InitAbilityActorInfo();
 	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> AttributeClass, float Level = 1.0f) const;
 	void InitializeDefaultAttributes()	const;
+
+	void AddCharacterAbilities();
+private:
+	UPROPERTY(EditAnywhere)
+	TArray<TSubclassOf<UGameplayAbility>> StartupAbilityClasses;
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

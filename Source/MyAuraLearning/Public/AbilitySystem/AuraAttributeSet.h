@@ -46,6 +46,8 @@ struct FEffectProperties
 	
 };
 
+template<class T>
+using TStaticFuncPtr = typename TBaseStaticDelegateInstance<T, FDefaultDelegateUserPolicy>::FFuncPtr;
 
 UCLASS()
 class MYAURALEARNING_API UAuraAttributeSet : public UAttributeSet
@@ -54,6 +56,8 @@ class MYAURALEARNING_API UAuraAttributeSet : public UAttributeSet
 	
 public:
 	UAuraAttributeSet();
+
+	TMap<FGameplayTag, TStaticFuncPtr<FGameplayAttribute()>> TagsToAttributes;
 	
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
