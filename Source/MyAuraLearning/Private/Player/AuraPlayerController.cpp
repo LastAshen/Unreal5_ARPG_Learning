@@ -73,6 +73,7 @@ void AAuraPlayerController::AbilityInputHeld(FGameplayTag Tag)
 	{
 		if(GetGAS()) 
 			GetGAS()->AbilityInputTagHeld(Tag);
+		return;
 	}
 
 	if(bTargeting)
@@ -103,6 +104,7 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag Tag)
 	{
 		if(GetGAS()) 
 			GetGAS()->AbilityInputTagReleased(Tag);
+		return;
 	}
 
 	if(bTargeting)

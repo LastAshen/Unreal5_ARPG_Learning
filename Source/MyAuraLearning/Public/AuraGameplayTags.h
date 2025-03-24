@@ -6,7 +6,7 @@
 #include "GameplayTagContainer.h"
 
 /**
- * Sington containing native Gameplay Tags
+ * Singleton containing native Gameplay Tags
  */
 struct FAuraGameplayTags
 {

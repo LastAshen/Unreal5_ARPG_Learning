@@ -23,6 +23,7 @@ public:
 	//AAuraCharacterBase(const FObjectInitializer& ObjectInitializer);
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	virtual FVector GetCombatSocketLocation() override;
 
 	UFUNCTION(BlueprintCallable)
 	UAttributeSet* GetAttributeSet() const {return AttributeSet;}
@@ -38,6 +39,9 @@ protected:
 	
 	UPROPERTY()
 	TObjectPtr<UAttributeSet> AttributeSet;
+
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	FName WeaponTipSocketName;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attribute")
 	TSubclassOf<UGameplayEffect> DefaultPrimaryAttributeClass;

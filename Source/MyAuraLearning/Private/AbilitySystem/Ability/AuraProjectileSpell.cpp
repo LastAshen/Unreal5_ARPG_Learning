@@ -1,0 +1,33 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "AbilitySystem/Ability/AuraProjectileSpell.h"
+
+#include "Interaction/CombatInterface.h"
+
+//#include "Kismet/KismetSystemLibrary.h"
+
+void UAuraProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
+                                           const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
+                                           const FGameplayEventData* TriggerEventData)
+{
+	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+	//UKismetSystemLibrary::PrintString(this, FString("ActivateAbility (C++)"), true, true, FColor::Green, 3);
+
+	if(HasAuthority(&ActivationInfo))
+	{
+		if(const auto CombatInterface = Cast<ICombatInterface>(GetAvatarActorFromActorInfo()))
+		{
+			const auto SocketLocation = CombatInterface->GetCombatSocketLocation();
+			FTransform SpawnTransform;
+			SpawnTransform.SetLocation(SocketLocation);
+
+			
+			auto Projectile = GetWorld()->SpawnActorDeferred<AAuraProjectile>(ProjectileClass,SpawnTransform,
+				GetOwningActorFromActorInfo(),Cast<APawn>(GetOwningActorFromActorInfo()),ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+
+
+			Projectile->FinishSpawning(SpawnTransform);
+		}
+	}
+}
