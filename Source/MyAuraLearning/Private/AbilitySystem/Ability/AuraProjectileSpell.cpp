@@ -16,18 +16,29 @@ void UAuraProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Hand
 
 	if(HasAuthority(&ActivationInfo))
 	{
-		if(const auto CombatInterface = Cast<ICombatInterface>(GetAvatarActorFromActorInfo()))
-		{
-			const auto SocketLocation = CombatInterface->GetCombatSocketLocation();
-			FTransform SpawnTransform;
-			SpawnTransform.SetLocation(SocketLocation);
 
+	}
+}
+
+void UAuraProjectileSpell::SpawnProjectile(const FVector& TargetLocation)
+{
+	const bool bIsServer = GetAvatarActorFromActorInfo()->HasAuthority();
+	if(!bIsServer) return;
+
+	if(const auto CombatInterface = Cast<ICombatInterface>(GetAvatarActorFromActorInfo()))
+	{
+		const auto SocketLocation = CombatInterface->GetCombatSocketLocation();
+		FTransform SpawnTransform;
+		
+		auto Avator = GetAvatarActorFromActorInfo();
+		FRotator Rotation = (TargetLocation - Avator->GetActorLocation()).Rotation();
+
+		SpawnTransform.SetLocation(SocketLocation);
+		SpawnTransform.SetRotation(Rotation.Quaternion());
 			
-			auto Projectile = GetWorld()->SpawnActorDeferred<AAuraProjectile>(ProjectileClass,SpawnTransform,
-				GetOwningActorFromActorInfo(),Cast<APawn>(GetOwningActorFromActorInfo()),ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
-
-
-			Projectile->FinishSpawning(SpawnTransform);
-		}
+		auto Projectile = GetWorld()->SpawnActorDeferred<AAuraProjectile>(ProjectileClass,SpawnTransform,
+			GetOwningActorFromActorInfo(),Cast<APawn>(GetOwningActorFromActorInfo()),ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+		
+		Projectile->FinishSpawning(SpawnTransform);
 	}
 }

@@ -18,6 +18,9 @@ class MYAURALEARNING_API UAuraProjectileSpell : public UAuraGameplayAbility
 protected: //Functions
 	virtual  void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 
+	UFUNCTION(BlueprintCallable)
+	void SpawnProjectile(const FVector& TargetLocation);
+	
 protected://Properties
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AAuraProjectile> ProjectileClass;
