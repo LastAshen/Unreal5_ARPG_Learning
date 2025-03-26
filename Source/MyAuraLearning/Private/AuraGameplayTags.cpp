@@ -8,6 +8,7 @@ FAuraGameplayTags FAuraGameplayTags::GameplayTags; //TODO 为什么？
 
 void FAuraGameplayTags::InitializeNativeGameplayTags()
 {
+	//Attributes
 	GameplayTags.Attribute_Vital_Health = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attribute.Vital.Health"),FString(""));
 	GameplayTags.Attribute_Vital_Mana = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attribute.Vital.Mana"),FString(""));
 
@@ -34,4 +35,33 @@ void FAuraGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.InputTag_2 =	UGameplayTagsManager::Get().AddNativeGameplayTag(FName("InputTag.2"),FString(""));
 	GameplayTags.InputTag_3 =	UGameplayTagsManager::Get().AddNativeGameplayTag(FName("InputTag.3"),FString(""));
 	GameplayTags.InputTag_4 =	UGameplayTagsManager::Get().AddNativeGameplayTag(FName("InputTag.4"),FString(""));
+
+	//Combat
+	GameplayTags.Combat_IncomingDamage = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Combat.IncomingDamage"),FString(""));
+	GameplayTags.Effect_HitReact = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Effect.HitReact"),FString(""));
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

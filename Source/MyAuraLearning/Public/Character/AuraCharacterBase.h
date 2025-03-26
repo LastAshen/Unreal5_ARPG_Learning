@@ -24,6 +24,11 @@ public:
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	virtual FVector GetCombatSocketLocation() override;
+	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
+	virtual void Die() override;
+
+	UFUNCTION(NetMulticast, Reliable)
+	virtual  void MulticastHandleDeath();
 
 	UFUNCTION(BlueprintCallable)
 	UAttributeSet* GetAttributeSet() const {return AttributeSet;}
@@ -40,6 +45,9 @@ protected:
 	UPROPERTY()
 	TObjectPtr<UAttributeSet> AttributeSet;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	UAnimMontage* HitReactMontage;
+
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	FName WeaponTipSocketName;
 
@@ -53,10 +61,27 @@ protected:
 	TSubclassOf<UGameplayEffect> DefaultVitalAttributeClass;
 
 	virtual void InitAbilityActorInfo();
-	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> AttributeClass, float Level = 1.0f) const;
-	void InitializeDefaultAttributes()	const;
+	void ApplyEffectToSelf(const TSubclassOf<UGameplayEffect>& AttributeClass, float Level = 1.0f) const;
+	virtual void InitializeDefaultAttributes()	const;
 
 	void AddCharacterAbilities();
+
+	//Dissolve Effects
+
+	void Dissolve();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void StartDissolveTimeline(UMaterialInstanceDynamic* DynamicMaterialInstance);//, UMaterialInstanceDynamic* WeaponDynamicMaterialInstance);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void StartWeaponDissolveTimeline(UMaterialInstanceDynamic* DynamicMaterialInstance);
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat")
+	TObjectPtr<UMaterialInstance> DissolveMaterialInstance;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat")
+	TObjectPtr<UMaterialInstance> WeaponDissolveMaterialInstance;
+	
 private:
 	UPROPERTY(EditAnywhere)
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilityClasses;

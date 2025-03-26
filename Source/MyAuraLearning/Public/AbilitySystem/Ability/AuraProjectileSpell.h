@@ -14,6 +14,8 @@ UCLASS()
 class MYAURALEARNING_API UAuraProjectileSpell : public UAuraGameplayAbility
 {
 	GENERATED_BODY()
+
+	
 	
 protected: //Functions
 	virtual  void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
@@ -24,4 +26,7 @@ protected: //Functions
 protected://Properties
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AAuraProjectile> ProjectileClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly);
+	TSubclassOf<UGameplayEffect> DamageEffect;
 };

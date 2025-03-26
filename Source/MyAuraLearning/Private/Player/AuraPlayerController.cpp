@@ -10,6 +10,7 @@
 #include "NavigationPath.h"
 #include "NavigationSystem.h"
 #include "Components/SplineComponent.h"
+#include "GameFramework/Character.h"
 #include "Input/AuraInputComponent.h"
 #include "Interaction/EnemyInterface.h"
 
@@ -58,6 +59,17 @@ void AAuraPlayerController::PlayerTick(float DeltaTime)
 	AutoRun();
 }
 
+void AAuraPlayerController::ShowDamageNumber_Implementation(float DamageAmount,  ACharacter* TargetCharacter)
+{
+	if(IsValid(TargetCharacter) && DamageTextWidgetClass)
+	{
+		auto DamageTextComp = NewObject<UDamageTextWidgetComponent>(TargetCharacter->GetRootComponent(), DamageTextWidgetClass, FName("DamageTextWidgetComp"));
+		DamageTextComp->RegisterComponent();
+		DamageTextComp->SetDamageText(DamageAmount);
+		DamageTextComp->AttachToComponent(TargetCharacter->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
+		DamageTextComp->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+	}
+}
 
 void AAuraPlayerController::AbilityInputTagPressed(FGameplayTag Tag)
 {
