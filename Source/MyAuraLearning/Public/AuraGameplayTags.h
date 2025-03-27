@@ -44,6 +44,12 @@ public:
 	FGameplayTag Combat_IncomingDamage;
 	FGameplayTag Effect_HitReact;
 	
+	FGameplayTag Damage_Fire;
+	FGameplayTag Damage_Ice;
+	FGameplayTag Damage_Lightning;
+	FGameplayTag Damage_Physical;
+	
+	TArray<FGameplayTag> DamageTypes;
 protected:
 	
 private:

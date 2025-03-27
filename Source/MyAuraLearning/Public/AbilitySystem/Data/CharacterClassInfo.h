@@ -43,6 +43,25 @@ public:
 	UPROPERTY(EditAnywhere, Category="Common Class Defaults")
 	TArray<TSubclassOf<UGameplayAbility>> CommonAbilities;
 
+	UPROPERTY(EditDefaultsOnly, Category="Common Class Defaults")
+	TObjectPtr<UCurveTable> DamageCalcCoefCurveTable;
+
 	//UFUNCTION(BlueprintCallable)
 	FCharacterClassDefaultInfo GetDefaultInfo(ECharacterClass Class) const;
+
+	
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+

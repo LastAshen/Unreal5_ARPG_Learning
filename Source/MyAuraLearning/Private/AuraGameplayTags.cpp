@@ -39,6 +39,16 @@ void FAuraGameplayTags::InitializeNativeGameplayTags()
 	//Combat
 	GameplayTags.Combat_IncomingDamage = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Combat.IncomingDamage"),FString(""));
 	GameplayTags.Effect_HitReact = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Effect.HitReact"),FString(""));
+
+	//Damage
+	GameplayTags.Damage_Physical = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage.Physical"),FString(""));
+	GameplayTags.DamageTypes.Add(GameplayTags.Damage_Physical);
+	GameplayTags.Damage_Fire = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage.Fire"),FString(""));
+	GameplayTags.DamageTypes.Add(GameplayTags.Damage_Fire);
+	GameplayTags.Damage_Ice = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage.Ice"),FString(""));
+	GameplayTags.DamageTypes.Add(GameplayTags.Damage_Ice);
+	GameplayTags.Damage_Lightning = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage.Lightning"),FString(""));
+	GameplayTags.DamageTypes.Add(GameplayTags.Damage_Lightning);
 }
 
 
