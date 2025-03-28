@@ -9,6 +9,8 @@
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "Interaction/CombatInterface.h"
 
+//static TMap<FGameplayTag, FGameplayEffectAttributeCaptureDefinition> TagsToCaptureDefs;
+
 struct AuraDamageStatics
 {
 	DECLARE_ATTRIBUTE_CAPTUREDEF(Armor);
@@ -17,6 +19,12 @@ struct AuraDamageStatics
 	DECLARE_ATTRIBUTE_CAPTUREDEF(CriticalHitChance);
 	DECLARE_ATTRIBUTE_CAPTUREDEF(CriticalHitDamage);
 	DECLARE_ATTRIBUTE_CAPTUREDEF(CriticalHitResistance);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(FireResistance);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(ArcaneResistance);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(PhysicalResistance);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(LightningResistance);
+	
+	TMap<FGameplayTag, FGameplayEffectAttributeCaptureDefinition> TagsToCaptureDefs;  //这里值得再优化
 	
 	AuraDamageStatics()
 	{
@@ -26,6 +34,16 @@ struct AuraDamageStatics
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, CriticalHitChance, Source, false);
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, CriticalHitDamage, Source, false);
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, CriticalHitResistance, Target, false);
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, FireResistance , Target, false);
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, ArcaneResistance, Target, false);
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, PhysicalResistance, Target, false);
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, LightningResistance, Target, false);
+
+		const auto Tags = FAuraGameplayTags::Get();
+		TagsToCaptureDefs.Add(Tags.Attribute_Resistance_Fire, FireResistanceDef);
+		TagsToCaptureDefs.Add(Tags.Attribute_Resistance_Arcane, ArcaneResistanceDef);
+		TagsToCaptureDefs.Add(Tags.Attribute_Resistance_Physical, PhysicalResistanceDef);
+		TagsToCaptureDefs.Add(Tags.Attribute_Resistance_Lightning, LightningResistanceDef);
 	}
 	
 };
@@ -43,7 +61,12 @@ UExecCalc_Damage::UExecCalc_Damage()
 	RelevantAttributesToCapture.Add(DamageStatics().ArmorPenetrationDef); 
 	RelevantAttributesToCapture.Add(DamageStatics().CriticalHitChanceDef); 
 	RelevantAttributesToCapture.Add(DamageStatics().CriticalHitDamageDef); 
-	RelevantAttributesToCapture.Add(DamageStatics().CriticalHitResistanceDef); 
+	RelevantAttributesToCapture.Add(DamageStatics().CriticalHitResistanceDef);
+	RelevantAttributesToCapture.Add(DamageStatics().ArcaneResistanceDef);
+	RelevantAttributesToCapture.Add(DamageStatics().FireResistanceDef);
+	RelevantAttributesToCapture.Add(DamageStatics().LightningResistanceDef);
+	RelevantAttributesToCapture.Add(DamageStatics().PhysicalResistanceDef);
+	
 }
 
 //TODO:  看不懂的代码
@@ -87,9 +110,15 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	
 	//Get Damage Set by Caller Magnitude
 	float Damage = 0.f;
-	for(auto Tag : FAuraGameplayTags::Get().DamageTypes)
+	for(auto Pair : FAuraGameplayTags::Get().DamageTypesToResistances)
 	{
-		Damage += Spec.GetSetByCallerMagnitude(Tag, false);
+		float Res = 0.f;
+		FGameplayEffectAttributeCaptureDefinition CaptureDef;
+ 		if(UAuraAbilitySystem_BFL::FindByCheckIfContains(AuraDamageStatics().TagsToCaptureDefs, Pair.Value, CaptureDef))
+		{
+			ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(CaptureDef, EvaluationParams, Res);
+		}
+		Damage += Spec.GetSetByCallerMagnitude(Pair.Key, false) * (100.f - Res) / 100.f;
 	}
 
 	//Capture BlockChance from Target

@@ -11,9 +11,10 @@
 #include "UI/WidgetController/OverlayWidgetController.h"
 #include "AuraEnemy.generated.h"
 
-/**
- * 
- */
+class UBehaviorTree;
+class UBehaviorTreeComponent;
+class AAuraAIController;
+
 UCLASS()
 class MYAURALEARNING_API AAuraEnemy : public AAuraCharacterBase, public IEnemyInterface
 {
@@ -21,6 +22,7 @@ class MYAURALEARNING_API AAuraEnemy : public AAuraCharacterBase, public IEnemyIn
 
 public:
 	AAuraEnemy();
+	virtual void PossessedBy(AController* NewController) override;
 
 	// IEnemyInterface
 	virtual void Highlight() override;
@@ -66,4 +68,37 @@ protected:
 	
 	UPROPERTY(BlueprintReadOnly, Category = "Combat")
 	float BaseWalkSpeed = 250.f;
-};
+
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
+	TObjectPtr<UBehaviorTree> BehaviorTree;
+
+	UPROPERTY()
+	TObjectPtr<AAuraAIController> AuraAIController;
+}; 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

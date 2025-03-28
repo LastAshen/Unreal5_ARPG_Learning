@@ -43,4 +43,41 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Aura Ability System Library | Gameplay Effects")
 	static void SetIsCriticalHit(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, bool bInIsCriticalHit);
+
+	//UFUNCTION(BlueprintCallable, Category = "Extension")
+	template<typename K, typename V>
+	static bool FindByCheckIfContains(const TMap<K,V>& Map, K Key, V& OutValue)
+	{
+		if(Map.Contains(Key))
+		{
+			OutValue = *Map.Find(Key);
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
