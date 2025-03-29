@@ -4,7 +4,9 @@
 #include "AbilitySystem/AuraAbilitySystem_BFL.h"
 
 #include "AuraAbilityTypes.h"
+#include "Engine/OverlapResult.h"
 #include "Game/AuraGameModeBase.h"
+#include "Interaction/CombatInterface.h"
 #include "Kismet/GameplayStatics.h"
 #include "Player/AuraPlayerState.h"
 #include "UI/HUD/AuraHUD.h"
@@ -68,7 +70,7 @@ void UAuraAbilitySystem_BFL::InitializeDefaultAttributesForCharacterClass(const 
 	
 }
 
-void UAuraAbilitySystem_BFL::GiveStartupAttributes(const UObject* WorldContextObject,UAbilitySystemComponent* AbilitySystemComponent)
+void UAuraAbilitySystem_BFL::GiveStartupAttributes(const UObject* WorldContextObject,UAbilitySystemComponent* AbilitySystemComponent, ECharacterClass CharacterClass)
 {
 	auto AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));   //如果是客户端，这里gamemode应该是空的
 	if (!AuraGameMode)
@@ -79,6 +81,15 @@ void UAuraAbilitySystem_BFL::GiveStartupAttributes(const UObject* WorldContextOb
 	{
 		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
 		AbilitySystemComponent->GiveAbility(AbilitySpec);
+	}
+
+	for(auto AbilityClass: AuraGameMode->CharacterClassInfo->GetDefaultInfo(CharacterClass).StartupAbilities)
+	{
+		  if(auto CombatInterface = Cast<ICombatInterface>(AbilitySystemComponent->GetAvatarActor()))
+		  {
+				auto AbilitiSpec = FGameplayAbilitySpec(AbilityClass, CombatInterface->GetPlayerLevel());
+				AbilitySystemComponent->GiveAbility(AbilitiSpec);
+		  }
 	}
 }
 
@@ -124,6 +135,26 @@ void UAuraAbilitySystem_BFL::SetIsCriticalHit(FGameplayEffectContextHandle& Effe
 	if(auto AuraEffectContext = static_cast<FAuraGameplayEffectContext*>(EffectContextHandle.Get()))
 	{
 		AuraEffectContext->SetIsCriticalHit(bInIsCriticalHit);
+	}
+}
+
+void UAuraAbilitySystem_BFL::GetLivePlayersWithinRadius(const UObject* WorldContextObject, const FVector& Origin,
+	float Radius, TArray<AActor*>& ActorsToIgnore, TArray<AActor*>& OutActors)
+{
+	FCollisionQueryParams SphereParams;
+	SphereParams.AddIgnoredActors(ActorsToIgnore);
+	if(UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
+	{
+		TArray<FOverlapResult> Overlaps;
+		World->OverlapMultiByObjectType(Overlaps, Origin, FQuat::Identity, FCollisionObjectQueryParams(FCollisionObjectQueryParams::InitType::AllDynamicObjects), FCollisionShape::MakeSphere(Radius), SphereParams);
+		for(auto& Overlap : Overlaps)
+		{
+			 //注意这里应该使用 UCombatInterface   ↓↓↓   而非 ICombatInterface
+			if(Overlap.GetActor()->Implements<UCombatInterface>() && !ICombatInterface::Execute_IsDead(Overlap.GetActor()))
+			{
+				OutActors.AddUnique(ICombatInterface::Execute_GetAvatar(Overlap.GetActor()));
+			}
+		}
 	}
 }
 

@@ -27,7 +27,7 @@ public:
 	static void InitializeDefaultAttributesForCharacterClass(const UObject* WorldContextObject, ECharacterClass CharacterClass, float Level, UAbilitySystemComponent* AbilitySystemComponent);
 
 	UFUNCTION(BlueprintCallable, Category = "Aura Ability System Library | Character Class Defaults")
-	static  void GiveStartupAttributes(const UObject* WorldContextObject, UAbilitySystemComponent* AbilitySystemComponent);
+	static  void GiveStartupAttributes(const UObject* WorldContextObject, UAbilitySystemComponent* AbilitySystemComponent, ECharacterClass CharacterClass);
 
 	UFUNCTION(BlueprintCallable, Category = "Aura Ability System Library | Character Class Defaults")
 	static UCharacterClassInfo* GetCharacterClassInfo(const UObject* WorldContextObject);
@@ -44,7 +44,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Aura Ability System Library | Gameplay Effects")
 	static void SetIsCriticalHit(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, bool bInIsCriticalHit);
 
-	//UFUNCTION(BlueprintCallable, Category = "Extension")
+	UFUNCTION(BlueprintCallable, Category = "Aura Ability System Library | Gameplay Mechanics")
+	static void GetLivePlayersWithinRadius(const UObject* WorldContextObject,const FVector& Origin, float Radius,UPARAM(ref) TArray<AActor*>& ActorsToIgnore, TArray<AActor*>& OutActors);
+	
+
+
+
+	// Helper function to find a value in a map by key and return true if found, false otherwise
 	template<typename K, typename V>
 	static bool FindByCheckIfContains(const TMap<K,V>& Map, K Key, V& OutValue)
 	{

@@ -49,6 +49,9 @@ void AAuraEnemy::PossessedBy(AController* NewController)
 	AuraAIController = Cast<AAuraAIController>(NewController);
 	AuraAIController->GetBlackboardComponent()->InitializeBlackboard(*BehaviorTree->BlackboardAsset);
 	AuraAIController->RunBehaviorTree(BehaviorTree);
+	AuraAIController->GetBlackboardComponent()->SetValueAsBool(TEXT("HitReacting"), false);
+	AuraAIController->GetBlackboardComponent()->SetValueAsBool(TEXT("RangedAttacker"), CharacterClass != ECharacterClass::Warrior);
+	
 } 
 
 void AAuraEnemy::Highlight()
@@ -88,6 +91,16 @@ void AAuraEnemy::Die()
 	Super::Die();
 }
 
+void AAuraEnemy::SetCombatTarget_Implementation(AActor* Target)
+{
+	CombatTarget = Target;
+}
+
+AActor* AAuraEnemy::GetCombatTarget_Implementation() const
+{
+	return CombatTarget;
+}
+
 
 void AAuraEnemy::BeginPlay()
 {
@@ -95,7 +108,7 @@ void AAuraEnemy::BeginPlay()
 	InitAbilityActorInfo();
 	
 	if(HasAuthority())
-		UAuraAbilitySystem_BFL::GiveStartupAttributes(this,AbilitySystemComponent);
+		UAuraAbilitySystem_BFL::GiveStartupAttributes(this,AbilitySystemComponent, CharacterClass);
 
 	if(UAuraUserWidget* AuraUserWidget = Cast<UAuraUserWidget>(HealthBar->GetUserWidgetObject()))
 	{
@@ -143,6 +156,9 @@ void AAuraEnemy::HitReactTagChanged(const FGameplayTag Tag, int32 NewCount)
 {
 	bHitReacting = NewCount > 0;
 	GetCharacterMovement()->MaxWalkSpeed = bHitReacting ? 0.0f : BaseWalkSpeed;
+
+	if(AuraAIController && AuraAIController->GetBlackboardComponent())
+		AuraAIController->GetBlackboardComponent()->SetValueAsBool(TEXT("HitReacting"), bHitReacting);
 }
 
 

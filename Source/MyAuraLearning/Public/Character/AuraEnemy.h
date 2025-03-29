@@ -32,6 +32,8 @@ public:
 	// ICombatInterface
 	virtual int32 GetPlayerLevel() override;
 	virtual  void Die() override;
+	virtual void SetCombatTarget_Implementation(AActor* Target) override;
+	virtual AActor* GetCombatTarget_Implementation() const override;
 	// End ICombatInterface
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Aura Enemy")
@@ -45,6 +47,8 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FOnAttributeChangedSignature OnMaxHealthChanged;
+
+
 
 protected:
 	virtual void BeginPlay() override;
@@ -62,6 +66,9 @@ protected:
 
 	UFUNCTION()
 	void HitReactTagChanged(const FGameplayTag Tag, int32 NewCount);
+
+	UPROPERTY(BlueprintReadOnly,  Category = "Combat")
+	TObjectPtr<AActor> CombatTarget;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Combat")
 	bool bHitReacting = false;

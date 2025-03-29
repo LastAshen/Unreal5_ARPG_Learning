@@ -25,7 +25,8 @@ void UBTService_FindNearestPlayer::TickNode(UBehaviorTreeComponent& OwnerComp, u
 	{
 		if(IsValid(Actor))
 		{
-			if(float Distance = OwningPawn->GetDistanceTo(Actor) < ClosestDistance)
+			float Distance = OwningPawn->GetDistanceTo(Actor);
+			if(Distance < ClosestDistance)
 			{
 				ClosestDistance = Distance;
 				ClosestActor = Actor;

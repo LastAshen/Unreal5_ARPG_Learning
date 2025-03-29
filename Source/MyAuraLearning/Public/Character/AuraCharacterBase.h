@@ -23,9 +23,14 @@ public:
 	//AAuraCharacterBase(const FObjectInitializer& ObjectInitializer);
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
-	virtual FVector GetCombatSocketLocation() override;
+
+	// ICombatInterface
+	virtual FVector GetCombatSocketLocation_Implementation() const override;
 	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
 	virtual void Die() override;
+	virtual bool IsDead_Implementation() const override;
+	virtual AActor* GetAvatar_Implementation()const override;
+	// End ICombatInterface
 
 	UFUNCTION(NetMulticast, Reliable)
 	virtual  void MulticastHandleDeath();
@@ -38,6 +43,9 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
+	bool bIsDead = false;
 
 	UPROPERTY()
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
