@@ -6,6 +6,7 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 #include "NiagaraFunctionLibrary.h"
+#include "AbilitySystem/AuraAbilitySystem_BFL.h"
 #include "Components/AudioComponent.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
@@ -54,7 +55,16 @@ void AAuraProjectile::Destroyed()
 void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
                                       UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if(DamageEffectSpecHandle.Data.IsValid() && DamageEffectSpecHandle.Data.Get()->GetContext().GetEffectCauser() == OtherActor)
+	// if(!DamageEffectSpecHandle.Data.IsValid())
+	// {
+	// 	UE_LOG(LogTemp, Error, TEXT("DamageEffectSpecHandle is not valid!"));
+	// 	return;`
+	// }
+	
+	if(!DamageEffectSpecHandle.Data.IsValid() ||DamageEffectSpecHandle.Data.Get()->GetContext().GetEffectCauser() == OtherActor)
+		return;
+
+	if(UAuraAbilitySystem_BFL::IsFriends(OtherActor, DamageEffectSpecHandle.Data->GetContext().GetEffectCauser()))
 		return;
 
 	if(!bHit)

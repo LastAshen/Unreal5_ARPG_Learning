@@ -25,11 +25,12 @@ public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 	// ICombatInterface
-	virtual FVector GetCombatSocketLocation_Implementation() const override;
+	virtual FVector GetCombatSocketLocation_Implementation(const FGameplayTag& MontageTag) const override;
 	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
 	virtual void Die() override;
 	virtual bool IsDead_Implementation() const override;
 	virtual AActor* GetAvatar_Implementation()const override;
+	virtual TArray<FTaggedMontage> GetAttackMontages_Implementation() const override;
 	// End ICombatInterface
 
 	UFUNCTION(NetMulticast, Reliable)
@@ -38,7 +39,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	UAttributeSet* GetAttributeSet() const {return AttributeSet;}
 	
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Combat")
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Combat")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
 
 protected:
@@ -58,6 +59,12 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	FName WeaponTipSocketName;
+	
+	UPROPERTY(EditAnywhere, Category = "Combat")	
+	FName LeftHandSocketName;
+	
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	FName RightHandSocketName;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attribute")
 	TSubclassOf<UGameplayEffect> DefaultPrimaryAttributeClass;
@@ -89,6 +96,9 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat")
 	TObjectPtr<UMaterialInstance> WeaponDissolveMaterialInstance;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	TArray<FTaggedMontage> AttackMontages;
 	
 private:
 	UPROPERTY(EditAnywhere)

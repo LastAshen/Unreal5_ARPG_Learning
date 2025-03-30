@@ -158,6 +158,13 @@ void UAuraAbilitySystem_BFL::GetLivePlayersWithinRadius(const UObject* WorldCont
 	}
 }
 
+bool UAuraAbilitySystem_BFL::IsFriends(const AActor* Actor1, const AActor* Actor2)
+{
+	if(Actor1 == nullptr || Actor2 == nullptr)
+		return false;
+	return Actor1->ActorHasTag("Player") && Actor2->ActorHasTag("Player") || Actor1->ActorHasTag("Enemy") && Actor2->ActorHasTag("Enemy");
+}
+
 
 
 

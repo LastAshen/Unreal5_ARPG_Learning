@@ -47,7 +47,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Aura Ability System Library | Gameplay Mechanics")
 	static void GetLivePlayersWithinRadius(const UObject* WorldContextObject,const FVector& Origin, float Radius,UPARAM(ref) TArray<AActor*>& ActorsToIgnore, TArray<AActor*>& OutActors);
 	
-
+	UFUNCTION(BlueprintCallable, Category = "Aura Ability System Library | Gameplay Mechanics")
+	static bool IsFriends(const AActor* Actor1, const AActor* Actor2);
 
 
 	// Helper function to find a value in a map by key and return true if found, false otherwise

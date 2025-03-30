@@ -2,6 +2,8 @@
 
 
 #include "Character/AuraCharacterBase.h"
+
+#include "AuraGameplayTags.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "Components/CapsuleComponent.h"
 
@@ -22,9 +24,16 @@ UAbilitySystemComponent* AAuraCharacterBase::GetAbilitySystemComponent() const
 	return AbilitySystemComponent;
 }
 
-FVector AAuraCharacterBase::GetCombatSocketLocation_Implementation() const
+FVector AAuraCharacterBase::GetCombatSocketLocation_Implementation(const FGameplayTag& MontageTag) const
 {
-	return  Weapon->GetSocketLocation(WeaponTipSocketName);
+	if(MontageTag.MatchesTagExact(FAuraGameplayTags::Get().Montage_Attack_Weapon))
+		return Weapon->GetSocketLocation(WeaponTipSocketName);
+	if(MontageTag.MatchesTagExact( FAuraGameplayTags::Get().Montage_Attack_LeftHand))
+		return GetMesh()->GetSocketLocation(LeftHandSocketName);
+	if(MontageTag.MatchesTagExact( FAuraGameplayTags::Get().Montage_Attack_RightHand))
+		return GetMesh()->GetSocketLocation(RightHandSocketName);
+
+	return FVector::ZeroVector;
 }
 
 
@@ -48,7 +57,12 @@ AActor* AAuraCharacterBase::GetAvatar_Implementation() const
 {
 	return const_cast<AActor*>(Cast<AActor>(this));
 }
- 
+
+TArray<FTaggedMontage> AAuraCharacterBase::GetAttackMontages_Implementation() const
+{ 
+	return AttackMontages;
+}
+
 void AAuraCharacterBase::MulticastHandleDeath_Implementation()
 {
 	Weapon->SetSimulatePhysics(true);
