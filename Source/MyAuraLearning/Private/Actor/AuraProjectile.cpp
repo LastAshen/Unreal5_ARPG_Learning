@@ -47,6 +47,7 @@ void AAuraProjectile::Destroyed()
 		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation(), FRotator::ZeroRotator, FVector(1.f));
 		if(AudioComp) AudioComp->Stop();
+		bHit = true;
 	}
 	
 	Super::Destroyed();
@@ -58,7 +59,7 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 	// if(!DamageEffectSpecHandle.Data.IsValid())
 	// {
 	// 	UE_LOG(LogTemp, Error, TEXT("DamageEffectSpecHandle is not valid!"));
-	// 	return;`
+	// 	return;
 	// }
 	
 	if(!DamageEffectSpecHandle.Data.IsValid() ||DamageEffectSpecHandle.Data.Get()->GetContext().GetEffectCauser() == OtherActor)
@@ -71,7 +72,9 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation(), FRotator::ZeroRotator, FVector(1.f));
-		if(AudioComp) AudioComp->Stop();
+		if(AudioComp)
+			AudioComp->Stop();
+		bHit = true;
 	}
 	
 	if(HasAuthority())

@@ -59,9 +59,13 @@ void FAuraGameplayTags::InitializeNativeGameplayTags()
 
 	//Ability
 	GameplayTags.Ability_Attack = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Ability.Attack"),FString(""));
+	GameplayTags.Ability_Summon = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Ability.Summon"),FString(""));
 	GameplayTags.Montage_Attack_Weapon = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Montage.Attack.Weapon"),FString(""));
 	GameplayTags.Montage_Attack_LeftHand = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Montage.Attack.LeftHand"),FString(""));
 	GameplayTags.Montage_Attack_RightHand = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Montage.Attack.RightHand"),FString(""));
+	GameplayTags.Montage_Attack_TailLeft = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Montage.Attack.TailLeft"),FString(""));
+	GameplayTags.Montage_Attack_TailRight = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Montage.Attack.TailRight"),FString(""));
+	
 }
 
 

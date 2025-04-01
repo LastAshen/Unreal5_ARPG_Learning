@@ -55,9 +55,12 @@ public:
 	FGameplayTag Damage_Physical;
 
 	FGameplayTag Ability_Attack;
+	FGameplayTag Ability_Summon;
 	FGameplayTag Montage_Attack_Weapon;
 	FGameplayTag Montage_Attack_RightHand;
 	FGameplayTag Montage_Attack_LeftHand;
+	FGameplayTag Montage_Attack_TailLeft;
+	FGameplayTag Montage_Attack_TailRight;
 	
 	TMap<FGameplayTag, FGameplayTag> DamageTypesToResistances;
 protected:
