@@ -5,6 +5,7 @@
 
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/AuraAttributeSet.h"
+#include "MyAuraLearning/AuraLogChannels.h"
 
 void UOverlayWidgetController::BroadcastInitialValues()
 {
@@ -41,18 +42,89 @@ void UOverlayWidgetController::BindCallbacksToDependecies()
 			OnMaxManaChanged.Broadcast(Data.NewValue);
 		});
 
-	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent) -> EffectAssetTags.AddLambda([this](const FGameplayTagContainer& Container)
+	if(auto ASC = Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent))
 	{
-		for (const FGameplayTag& Tag : Container)
+		if(ASC->bStartupAbilitiesGiven)
 		{
-			FGameplayTag MessageTag = FGameplayTag::RequestGameplayTag(FName("Message"));
-			if (Tag.MatchesTag(MessageTag))
+			OnInitializeStartupAbilities(ASC);
+		}
+		else
+		{
+			ASC->AbilitiesGivenDelegate.AddUObject(this, &UOverlayWidgetController::OnInitializeStartupAbilities);
+		}
+	
+		ASC-> EffectAssetTags.AddLambda([this](const FGameplayTagContainer& Container)
+		{
+			for (const FGameplayTag& Tag : Container)
 			{
-				if (const auto Row = GetDataTableRowByTag<FUIWidgetRow>(MessageDataTable, Tag))
+				FGameplayTag MessageTag = FGameplayTag::RequestGameplayTag(FName("Message"));
+				if (Tag.MatchesTag(MessageTag))
 				{
-					MessageWidgetRowDelegate.Broadcast(*Row);
+					if (const auto Row = GetDataTableRowByTag<FUIWidgetRow>(MessageDataTable, Tag))
+					{
+						MessageWidgetRowDelegate.Broadcast(*Row);
+					}
 				}
 			}
-		}
-	});
+		});
+	}
 }
+
+void UOverlayWidgetController::OnInitializeStartupAbilities(UAuraAbilitySystemComponent* ASC)
+{
+	if(!ASC->bStartupAbilitiesGiven) return;
+	
+	FForEachAbility BroadcastDelegate;
+	BroadcastDelegate.BindLambda([this, ASC](const FGameplayAbilitySpec& Spec)
+	{
+		FGameplayTag AbilityTag;
+		for (const FGameplayTag& Tag : Spec.Ability.Get()->AbilityTags)
+		{
+			if (Tag.IsValid() && Tag.MatchesTag(FGameplayTag::RequestGameplayTag(FName("Ability"))))
+				AbilityTag = Tag;
+		}
+
+		if (!AbilityTag.IsValid())
+		{
+			UE_LOG(LogAura,Error, TEXT("No Ability Tag found for Ability %s"), *Spec.Ability.Get()->GetName())
+			return;
+		}
+		
+		FAuraAbilityInfo Info = AbilityInfo->FindAbilityInfoByTag(AbilityTag, false);
+		for(const FGameplayTag& Tag : Spec.DynamicAbilityTags)
+		{
+			if(Tag.IsValid() && Tag.MatchesTag(FGameplayTag::RequestGameplayTag(FName("InputTag"))))
+				Info.InputTag = Tag;
+		}
+		AbilityInfoDelegate.Broadcast(Info);
+	});
+
+	ASC->ForEachAbility(BroadcastDelegate);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

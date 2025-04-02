@@ -20,7 +20,6 @@ public:	//Functions
 	AAuraProjectile();
 
 
-
 protected: //Functions
 	virtual void BeginPlay() override;
 	virtual void Destroyed() override;
@@ -40,6 +39,8 @@ public: //Properties
 	
 protected: //Properties
 
+	UPROPERTY(EditDefaultsOnly, Category = "AuraProjectile")
+	float LifeSpan = 10.f;
 	
 private:// Properties
 	bool bHit = false;

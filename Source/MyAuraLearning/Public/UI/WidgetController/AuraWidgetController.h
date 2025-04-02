@@ -35,7 +35,7 @@ struct FWidgetControllerParams
 };
 
 
-UCLASS()
+UCLASS(BlueprintType)
 class MYAURALEARNING_API UAuraWidgetController : public UObject
 {
 	GENERATED_BODY()

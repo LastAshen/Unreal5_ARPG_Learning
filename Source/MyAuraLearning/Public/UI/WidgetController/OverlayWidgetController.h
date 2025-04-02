@@ -5,8 +5,10 @@
 #include "CoreMinimal.h"
 #include "AuraWidgetController.h"
 #include "GameplayTagContainer.h"
+#include "AbilitySystem/Data/AbilityInfo.h"
 #include "OverlayWidgetController.generated.h"
 
+class UAuraAbilitySystemComponent;
 struct FOnAttributeChangeData;
 class UAuraUserWidget;
 
@@ -28,9 +30,9 @@ struct FUIWidgetRow : public FTableRowBase
 	UTexture2D* Image = nullptr;
 };
 
-
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeChangedSignature, float, NewValue);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMessageWidgetRowSignature, FUIWidgetRow, Row);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAbilityInfoSignature, const FAuraAbilityInfo&, Info);
 
 
 UCLASS(Blueprintable, BlueprintType)
@@ -62,9 +64,16 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget Data"	)
 	TObjectPtr<UDataTable> MessageDataTable;
 
-	template<typename T>
-	T* GetDataTableRowByTag(UDataTable* DataTable,const FGameplayTag& MessageTag);
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget Data"	)
+	TObjectPtr<UAbilityInfo> AbilityInfo;
+
+	UPROPERTY(BlueprintAssignable, BlueprintReadOnly)
+	FAbilityInfoSignature AbilityInfoDelegate;
 	
+	template<typename T> 
+	T* GetDataTableRowByTag(UDataTable* DataTable,const FGameplayTag& MessageTag);
+
+	void OnInitializeStartupAbilities(UAuraAbilitySystemComponent* ASC);
 };
 
 template <typename T>
@@ -72,3 +81,19 @@ T* UOverlayWidgetController::GetDataTableRowByTag(UDataTable* DataTable, const F
 {
 	return DataTable->FindRow<T>(MessageTag.GetTagName(), TEXT(""));
 } 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
