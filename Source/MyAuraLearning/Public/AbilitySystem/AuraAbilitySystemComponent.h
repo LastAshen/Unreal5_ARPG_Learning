@@ -22,9 +22,13 @@ public:
 	
 	void AbilityActorInfoSet();
 	void AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>> AbilityClasses);
+	void AddCharacterPassiveAbilities(const TArray<TSubclassOf<UGameplayAbility>> PassiveAbilityClasses);
+	
 	void AbilityInputTagHeld(const FGameplayTag& Tag);
 	void AbilityInputTagReleased(const FGameplayTag& Tag);
 	void ForEachAbility(const FForEachAbility& Delegate);
+
+	
 protected:
 	
 	UFUNCTION(Client, Reliable)  //用以解决不在客户端执行的问题

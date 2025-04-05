@@ -106,6 +106,10 @@ protected:
 private:
 	UPROPERTY(EditAnywhere)
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilityClasses;
+	
+	UPROPERTY(EditAnywhere)
+	TArray<TSubclassOf<UGameplayAbility>> StartupPassiveAbilityClasses;
+	
 };
 
 

@@ -39,6 +39,8 @@ public:
 	FGameplayTag Attribute_Resistance_Lightning;
 	FGameplayTag Attribute_Resistance_Physical;
 
+	FGameplayTag Attribute_Meta_IncomingXP;
+
 	FGameplayTag InputTag_LMB;
 	FGameplayTag InputTag_RMB;
 	FGameplayTag InputTag_1;
@@ -47,6 +49,7 @@ public:
 	FGameplayTag InputTag_4;
 
 	FGameplayTag Combat_IncomingDamage;
+
 	FGameplayTag Effect_HitReact;
 	
 	FGameplayTag Damage_Fire;

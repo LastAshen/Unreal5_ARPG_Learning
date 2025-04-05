@@ -1,3 +1,4 @@
+#pragma once
 #include "CoreMinimal.h"
 #include "Logging/LogMacros.h"
 //#include "AuraLogChannels.generated.h"

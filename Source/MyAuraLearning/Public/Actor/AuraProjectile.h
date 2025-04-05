@@ -36,6 +36,9 @@ public: //Properties
 
 	UPROPERTY(BlueprintReadWrite,meta=(ExposeOnSpawn=true))
 	FGameplayEffectSpecHandle DamageEffectSpecHandle;
+
+	UPROPERTY()
+	TObjectPtr<USceneComponent> HomingTargetSceneComp;
 	
 protected: //Properties
 

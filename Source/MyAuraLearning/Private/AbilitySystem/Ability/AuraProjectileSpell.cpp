@@ -6,6 +6,7 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 #include "AuraGameplayTags.h"
+#include "GameFramework/ProjectileMovementComponent.h"
 #include "Interaction/CombatInterface.h"
 
 //#include "Kismet/KismetSystemLibrary.h"
@@ -23,7 +24,7 @@ void UAuraProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Hand
 	}
 }
 
-void UAuraProjectileSpell::SpawnProjectile(const FVector& TargetLocation)
+void UAuraProjectileSpell::SpawnProjectile(const FVector& TargetLocation,bool OverridePitch,float Pitch, AActor* HomingTarget)
 {
 	const bool bIsServer = GetAvatarActorFromActorInfo()->HasAuthority();
 	if(!bIsServer) return;
@@ -32,6 +33,8 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& TargetLocation)
 	
 	FTransform SpawnTransform;
 	FRotator Rotation = (TargetLocation - SocketLocation).Rotation();
+	if(OverridePitch)
+		Rotation.Pitch = Pitch;
 
 	SpawnTransform.SetLocation(SocketLocation);
 	SpawnTransform.SetRotation(Rotation.Quaternion());
@@ -41,7 +44,7 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& TargetLocation)
 
 	const auto SourceASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo());
 	const FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), SourceASC->MakeEffectContext());
-	//Projectile->DamageEffectSpecHandle = SpecHandle;
+
 
 	FAuraGameplayTags GameplayTags = FAuraGameplayTags::Get();
 	for(auto& Pair :DamageTypes)
@@ -50,7 +53,25 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& TargetLocation)
 		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, Pair.Key, ScaledDamage);
 	}
 
+	if(HomingTarget)
+	{
+		if(HomingTarget->Implements<UCombatInterface>())
+		{
+			Projectile->ProjectileMovementComp->HomingTargetComponent = HomingTarget->GetRootComponent(); // 这里HomingTargetComponent是TWeakObjectPtr<UCombatComponent>类型
+		}
+		else
+		{
+			//没有对象的话，创建一个虚拟的目标
+			Projectile->HomingTargetSceneComp = NewObject<USceneComponent>(USceneComponent::StaticClass());
+			Projectile->HomingTargetSceneComp->SetWorldLocation(TargetLocation);
+			Projectile->ProjectileMovementComp->HomingTargetComponent = Projectile->HomingTargetSceneComp; 
+		}
+		Projectile->ProjectileMovementComp->HomingAccelerationMagnitude = 3000.f;
+		Projectile->ProjectileMovementComp->bIsHomingProjectile = true;
+	}
+
 	//react
+	//UAbilitySystemBlueprintLibrary::Assi
 	//UAbilitySystemBlueprintLibrary::(SpecHandle, Pair.Key, ScaledDamage);
 
 	Projectile->DamageEffectSpecHandle = SpecHandle;
