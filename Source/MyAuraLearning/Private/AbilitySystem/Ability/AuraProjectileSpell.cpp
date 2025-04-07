@@ -20,7 +20,7 @@ void UAuraProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Hand
 
 	if(HasAuthority(&ActivationInfo))
 	{
-
+		
 	}
 }
 
