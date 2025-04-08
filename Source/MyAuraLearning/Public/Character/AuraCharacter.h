@@ -27,4 +27,42 @@ public:
 	virtual void OnRep_PlayerState() override;
 	
 	virtual void InitAbilityActorInfo() override;
+
+	virtual void Die() override;
+
+protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TObjectPtr<UAnimMontage> DeathMontage;
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

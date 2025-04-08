@@ -63,6 +63,26 @@ void AAuraCharacter::InitAbilityActorInfo()
 	InitializeDefaultAttributes();
 }
 
+void AAuraCharacter::Die()
+{
+	//Super::Die();
+	Weapon->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld,true));
+	if(DeathMontage)
+	{
+		FOnMontageEnded MontageEndedDelegate;
+		MontageEndedDelegate.BindLambda([this](UAnimMontage* Montage, bool bInterrupted)
+		{
+			MulticastHandleDeath();
+		});
+
+		if (UAnimInstance * AnimInstance = (GetMesh())? GetMesh()->GetAnimInstance() : nullptr)
+		{
+			AnimInstance->Montage_SetEndDelegate(MontageEndedDelegate, DeathMontage);
+			PlayAnimMontage(DeathMontage);
+		}
+	}
+}
+
 int32 AAuraCharacter::GetPlayerLevel()
 {
 	// 这里命名不可以使用PlayerState,否则编译出错（但UE未给出准确编译错误信息）， 因为PlayerState在父类Pawn中已经声明为私有成员

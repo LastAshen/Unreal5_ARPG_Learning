@@ -50,6 +50,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Aura Ability System Library | Gameplay Mechanics")
 	static bool IsFriends(const AActor* Actor1, const AActor* Actor2);
 
+	UFUNCTION(BlueprintCallable, Category = "Aura Controller Helper")
+	static FHitResult GetPlayerCursorHitResult(const UObject* WorldContextObject);
+
 
 	// Helper function to find a value in a map by key and return true if found, false otherwise
 	template<typename K, typename V>

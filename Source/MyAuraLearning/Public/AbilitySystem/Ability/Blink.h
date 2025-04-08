@@ -20,5 +20,7 @@ public:
 
 	UPROPERTY(EditDefaultsOnly)
 	float BlinkDistance = 300.f;
-	
+
+	UPROPERTY(EditDefaultsOnly)
+	FVector TargetLocationOffset = FVector(0.f, 0.f, 60.f);
 };

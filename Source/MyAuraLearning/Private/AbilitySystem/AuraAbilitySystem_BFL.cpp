@@ -8,6 +8,7 @@
 #include "Game/AuraGameModeBase.h"
 #include "Interaction/CombatInterface.h"
 #include "Kismet/GameplayStatics.h"
+#include "Player/AuraPlayerController.h"
 #include "Player/AuraPlayerState.h"
 #include "UI/HUD/AuraHUD.h"
 #include "UI/WidgetController/AuraWidgetController.h"
@@ -163,6 +164,20 @@ bool UAuraAbilitySystem_BFL::IsFriends(const AActor* Actor1, const AActor* Actor
 	if(Actor1 == nullptr || Actor2 == nullptr)
 		return false;
 	return Actor1->ActorHasTag("Player") && Actor2->ActorHasTag("Player") || Actor1->ActorHasTag("Enemy") && Actor2->ActorHasTag("Enemy");
+}
+
+FHitResult UAuraAbilitySystem_BFL::GetPlayerCursorHitResult(const UObject* WorldContextObject)
+{
+	if(auto World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
+	{
+		auto Controller = UGameplayStatics::GetPlayerController(World, 0);
+		if(auto AuraController = Cast<AAuraPlayerController>(Controller))
+		{
+			return AuraController->GetCursorHitResult();
+		}
+	}
+
+	return FHitResult();
 }
 
 

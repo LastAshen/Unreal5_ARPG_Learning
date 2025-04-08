@@ -28,6 +28,9 @@ public:
 
 	UFUNCTION(Client, Reliable)
 	void ShowDamageNumber(float DamageAmount, ACharacter* TargetCharacter, bool bIsBlockedHit, bool bIsCriticalHit);
+
+	UFUNCTION(BlueprintCallable)
+	FHitResult GetCursorHitResult(){return CursorHit;};
 	
 protected:
 	virtual void BeginPlay() override;
