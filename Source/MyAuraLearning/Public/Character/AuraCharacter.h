@@ -4,13 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "Character/AuraCharacterBase.h"
+#include "Interaction/CharacterSkillInterface.h"
 #include "AuraCharacter.generated.h"
 
+class USkillSystemComponent;
 /**
  * 
  */
 UCLASS()
-class MYAURALEARNING_API AAuraCharacter : public AAuraCharacterBase
+class MYAURALEARNING_API AAuraCharacter : public AAuraCharacterBase, public ICharacterSkillInterface
 {
 	GENERATED_BODY()
 	
@@ -33,6 +35,9 @@ public:
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TObjectPtr<UAnimMontage> DeathMontage;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Skill System")
+	TObjectPtr<USkillSystemComponent> SkillSystemComp;
 };
 
 

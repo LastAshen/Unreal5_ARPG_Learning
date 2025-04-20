@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AuraDamageGameplayAbility.h"
-#include "AbilitySystem/Ability/AuraGameplayAbility.h"
+//#include "AbilitySystem/Ability/AuraGameplayAbility.h"
 #include "Actor/AuraProjectile.h"
 #include "AuraProjectileSpell.generated.h"
 
@@ -22,7 +22,8 @@ protected: //Functions
 	virtual  void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 
 	UFUNCTION(BlueprintCallable)
-	void SpawnProjectile(const FVector& TargetLocation,bool OverridePitch,float Pitch, AActor* HomingTarget);
+	AAuraProjectile* SpawnProjectile(const FVector& TargetLocation, bool OverridePitch, float Pitch,
+	                                 AActor* HomingTarget, const FGameplayTag& FireSocketTag = FGameplayTag());
 	
 protected://Properties
 	UPROPERTY(EditDefaultsOnly)

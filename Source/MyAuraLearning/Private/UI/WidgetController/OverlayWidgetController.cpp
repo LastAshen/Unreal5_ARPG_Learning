@@ -5,6 +5,8 @@
 
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/AuraAttributeSet.h"
+#include "AbilitySystem/SkillSystemComponent.h"
+#include "Character/AuraCharacter.h"
 #include "MyAuraLearning/AuraLogChannels.h"
 
 void UOverlayWidgetController::BroadcastInitialValues()
@@ -67,6 +69,26 @@ void UOverlayWidgetController::BindCallbacksToDependecies()
 				}
 			}
 		});
+	}
+
+	//SkillSystem
+	SkillSystemComp->OnChargeCountChangedDelegate.AddLambda([this](int32 NewValue)
+	{
+		OnSkillChargePointCountChangedDelegate.Broadcast(NewValue, SkillSystemComp->GetMaxChargeCount());
+	});
+	SkillSystemComp->OnEnergyPointCountChangedDelegate.AddLambda([this](int32 NewValue)
+	{
+		OnSkillEnergyPointCountChangedDelegate.Broadcast(NewValue, SkillSystemComp->GetMaxEnergyPointCount());
+	});
+	
+}
+
+void UOverlayWidgetController::SetWidgetControllerParams(const FWidgetControllerParams& InParams)
+{
+	Super::SetWidgetControllerParams(InParams);
+	if(auto Character = Cast<AAuraCharacter>( PlayerController->GetPawn()))
+	{
+		SkillSystemComp = Character->GetComponentByClass<USkillSystemComponent>();
 	}
 }
 

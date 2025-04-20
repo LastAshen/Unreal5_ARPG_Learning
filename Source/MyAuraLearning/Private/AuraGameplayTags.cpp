@@ -43,6 +43,7 @@ void FAuraGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.InputTag_2 =	UGameplayTagsManager::Get().AddNativeGameplayTag(FName("InputTag.2"),FString(""));
 	GameplayTags.InputTag_3 =	UGameplayTagsManager::Get().AddNativeGameplayTag(FName("InputTag.3"),FString(""));
 	GameplayTags.InputTag_4 =	UGameplayTagsManager::Get().AddNativeGameplayTag(FName("InputTag.4"),FString(""));
+	GameplayTags.InputTag_SpaceBar = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("InputTag.SpaceBar"),FString(""));
 
 	//Combat
 	GameplayTags.Combat_IncomingDamage = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Combat.IncomingDamage"),FString(""));

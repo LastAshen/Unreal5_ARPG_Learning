@@ -53,6 +53,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Aura Controller Helper")
 	static FHitResult GetPlayerCursorHitResult(const UObject* WorldContextObject);
 
+	UFUNCTION(BlueprintCallable, Category = "Ability Helper")
+	static FVector2D GetRandomVector2DInRange(float Radius);
+
 
 	// Helper function to find a value in a map by key and return true if found, false otherwise
 	template<typename K, typename V>
@@ -63,10 +66,8 @@ public:
 			OutValue = *Map.Find(Key);
 			return true;
 		}
-		else
-		{
-			return false;
-		}
+
+		return false;
 	}
 };
 

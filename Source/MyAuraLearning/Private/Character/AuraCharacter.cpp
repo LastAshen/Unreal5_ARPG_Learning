@@ -15,11 +15,13 @@ AAuraCharacter::AAuraCharacter()
 {
 	Tags.Add(FName("Character"));
 	
-	GetCharacterMovement()->MaxWalkSpeed = 600.0f;
-	GetCharacterMovement()->bOrientRotationToMovement = true;
+	GetCharacterMovement()->MaxWalkSpeed = 500.0f;
+	GetCharacterMovement()->bOrientRotationToMovement = false;
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 400.0f, 0.0f);
 	GetCharacterMovement()->bConstrainToPlane= true;
 	GetCharacterMovement()->bSnapToPlaneAtStart = true;
+	
+	SkillSystemComp = CreateDefaultSubobject<USkillSystemComponent>(TEXT("SkillSystemComp"));
 	
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
@@ -61,6 +63,7 @@ void AAuraCharacter::InitAbilityActorInfo()
 	}
 
 	InitializeDefaultAttributes();
+	SkillSystemComp->Initialize(AbilitySystemComponent, this);
 }
 
 void AAuraCharacter::Die()

@@ -8,6 +8,7 @@
 #include "AbilitySystem/Data/AbilityInfo.h"
 #include "OverlayWidgetController.generated.h"
 
+class USkillSystemComponent;
 class UAuraAbilitySystemComponent;
 struct FOnAttributeChangeData;
 class UAuraUserWidget;
@@ -33,6 +34,7 @@ struct FUIWidgetRow : public FTableRowBase
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeChangedSignature, float, NewValue);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMessageWidgetRowSignature, FUIWidgetRow, Row);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAbilityInfoSignature, const FAuraAbilityInfo&, Info);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSkillIntChangedSignature, int32, NewValue, int32, MaxValue);
 
 
 UCLASS(Blueprintable, BlueprintType)
@@ -42,7 +44,9 @@ class MYAURALEARNING_API UOverlayWidgetController : public UAuraWidgetController
 	
 public:
 	virtual void BroadcastInitialValues() override;
-	virtual void BindCallbacksToDependecies() override; 
+	virtual void BindCallbacksToDependecies() override;
+	
+	virtual void SetWidgetControllerParams(const FWidgetControllerParams& InParams) override;
 
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Attributes")
 	FOnAttributeChangedSignature OnHealthChanged;
@@ -58,6 +62,12 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Messages")
 	FMessageWidgetRowSignature MessageWidgetRowDelegate;
+
+	UPROPERTY(BlueprintAssignable, Category = "Skills")
+	FOnSkillIntChangedSignature OnSkillChargePointCountChangedDelegate;
+
+	UPROPERTY(BlueprintAssignable, Category = "Skills")
+	FOnSkillIntChangedSignature OnSkillEnergyPointCountChangedDelegate;
 	
 protected:
 
@@ -69,6 +79,9 @@ protected:
 
 	UPROPERTY(BlueprintAssignable, BlueprintReadOnly)
 	FAbilityInfoSignature AbilityInfoDelegate;
+
+	UPROPERTY()
+	TObjectPtr<USkillSystemComponent> SkillSystemComp;
 	
 	template<typename T> 
 	T* GetDataTableRowByTag(UDataTable* DataTable,const FGameplayTag& MessageTag);

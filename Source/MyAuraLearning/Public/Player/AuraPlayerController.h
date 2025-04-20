@@ -6,6 +6,8 @@
 #include "GameFramework/PlayerController.h"
 #include "GameplayTagContainer.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
+#include "AbilitySystem/SkillSystemComponent.h"
+#include "Interaction/CharacterSkillInterface.h"
 #include "UI/Widget/DamageTextWidgetComponent.h"
 #include "AuraPlayerController.generated.h"
 
@@ -31,11 +33,20 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	FHitResult GetCursorHitResult(){return CursorHit;};
+
+	UFUNCTION(BlueprintCallable)
+	void SetFacingCursor(bool bNewFacingCursor){bFacingCursor = bNewFacingCursor;};
+
+	UFUNCTION(BlueprintCallable)
+	bool GetFacingCursor(){ return bFacingCursor;};
 	
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
 	virtual void PlayerTick(float DeltaTime) override;
+	
+	UPROPERTY(BlueprintReadOnly, Category = "Skill System")
+	TObjectPtr<USkillSystemComponent> SkillSystemComp;
 
 private:
 	UPROPERTY(EditAnywhere, Category = "Input")
@@ -63,12 +74,7 @@ private:
 
 	IEnemyInterface* LastActor;
 	IEnemyInterface* ThisActor;
-
-	UPROPERTY()
-	TObjectPtr<UAuraAbilitySystemComponent> AuraAbilitySystemComponent;
-
-	UAuraAbilitySystemComponent* GetGAS();
-
+	
 	//Movement
 	FHitResult CursorHit;
 	FVector CachedDestination;
@@ -76,14 +82,15 @@ private:
 	float ShortPressThreshold = 0.3f;
 	bool bAutoRunning = false;
 	bool bTargeting = false;
+	bool bFacingCursor = true;
 	
 	UPROPERTY(EditDefaultsOnly)
 	float AutoRunAcceptRadius = 50.f;
 
-	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<USplineComponent> SplineComponent;
+	// UPROPERTY(VisibleAnywhere)
+	// TObjectPtr<USplineComponent> SplineComponent;
 
-	void AutoRun();
+	//void AutoRun();
 	//end Movement
 
 	UPROPERTY(EditDefaultsOnly)

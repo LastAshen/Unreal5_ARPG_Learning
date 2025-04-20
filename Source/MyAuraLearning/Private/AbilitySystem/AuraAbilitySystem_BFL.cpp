@@ -180,6 +180,17 @@ FHitResult UAuraAbilitySystem_BFL::GetPlayerCursorHitResult(const UObject* World
 	return FHitResult();
 }
 
+FVector2D UAuraAbilitySystem_BFL::GetRandomVector2DInRange(float Radius)
+{
+	if(Radius <= 0.0f)
+		return FVector2D::ZeroVector;
+	
+	auto RandomX = FMath::FRandRange(-Radius, Radius);
+	auto YRange = FMath::Sqrt(Radius * Radius - RandomX * RandomX);
+	auto RandomY = FMath::FRandRange(-YRange, YRange);
+	return FVector2D(RandomX, RandomY);
+}
+
 
 
 

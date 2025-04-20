@@ -24,12 +24,14 @@ void UAuraProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Hand
 	}
 }
 
-void UAuraProjectileSpell::SpawnProjectile(const FVector& TargetLocation,bool OverridePitch,float Pitch, AActor* HomingTarget)
+AAuraProjectile* UAuraProjectileSpell::SpawnProjectile(const FVector& TargetLocation, bool OverridePitch, float Pitch, AActor* HomingTarget, const FGameplayTag& FireSocketTag)
 {
 	const bool bIsServer = GetAvatarActorFromActorInfo()->HasAuthority();
-	if(!bIsServer) return;
-	
-	const auto SocketLocation = ICombatInterface::Execute_GetCombatSocketLocation(GetAvatarActorFromActorInfo(), FAuraGameplayTags::Get().Montage_Attack_Weapon);
+	if(!bIsServer) return nullptr;
+
+	const auto SocketLocation = ICombatInterface::Execute_GetCombatSocketLocation(GetAvatarActorFromActorInfo(),
+		FireSocketTag.IsValid() ? FireSocketTag : FAuraGameplayTags::Get().Montage_Attack_Weapon);
+
 	
 	FTransform SpawnTransform;
 	FRotator Rotation = (TargetLocation - SocketLocation).Rotation();
@@ -69,6 +71,10 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& TargetLocation,bool Ov
 		Projectile->ProjectileMovementComp->HomingAccelerationMagnitude = 3000.f;
 		Projectile->ProjectileMovementComp->bIsHomingProjectile = true;
 	}
+	else
+	{
+		Projectile->ProjectileMovementComp->bIsHomingProjectile = false;
+	}
 
 	//react
 	//UAbilitySystemBlueprintLibrary::Assi
@@ -76,7 +82,7 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& TargetLocation,bool Ov
 
 	Projectile->DamageEffectSpecHandle = SpecHandle;
 	Projectile->FinishSpawning(SpawnTransform);
-
+	return Projectile;
 }
 
 

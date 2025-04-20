@@ -11,6 +11,12 @@ void UAuraAbilitySystemComponent::AbilityActorInfoSet()
 	OnGameplayEffectAppliedDelegateToSelf.AddUObject(this, &UAuraAbilitySystemComponent::ClientEffectApplied);
 }
 
+void UAuraAbilitySystemComponent::AddCharacterAbility(TSubclassOf<UGameplayAbility> AbilityClass)
+{
+	FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
+	
+}
+
 void UAuraAbilitySystemComponent::AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>> AbilityClasses)
 {
 	for (TSubclassOf<UGameplayAbility> AbilityClass : AbilityClasses)
@@ -21,7 +27,7 @@ void UAuraAbilitySystemComponent::AddCharacterAbilities(const TArray<TSubclassOf
 		{
 			AbilitySpec.DynamicAbilityTags.AddTag(AuraAbility->StartupInputTag);
 			GiveAbility(AbilitySpec);
-		}
+		} 
 	}
 
 	bStartupAbilitiesGiven = true;
@@ -37,9 +43,9 @@ void UAuraAbilitySystemComponent::AddCharacterPassiveAbilities(const TArray<TSub
 	}
 }
 
-void UAuraAbilitySystemComponent::AbilityInputTagHeld(const FGameplayTag& Tag)
+bool UAuraAbilitySystemComponent::AbilityInputTagPressed(const FGameplayTag& Tag)
 {
-	if(!Tag.IsValid()) return;
+	if(!Tag.IsValid()) return false;
 	for(FGameplayAbilitySpec& Spec : GetActivatableAbilities())
 	{
 		if(Spec.DynamicAbilityTags.HasTagExact(Tag))
@@ -47,10 +53,30 @@ void UAuraAbilitySystemComponent::AbilityInputTagHeld(const FGameplayTag& Tag)
 			AbilitySpecInputPressed(Spec);
 			if(!Spec.IsActive())
 			{
-				TryActivateAbility(Spec.Handle);
+				auto result = TryActivateAbility(Spec.Handle);
+				InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputPressed, Spec.Handle, Spec.ActivationInfo.GetActivationPredictionKey());
+				return result;
 			}
 		}
 	}
+	return false;
+}
+
+bool UAuraAbilitySystemComponent::AbilityInputTagHeld(const FGameplayTag& Tag)
+{
+	if(!Tag.IsValid()) return false;
+	for(FGameplayAbilitySpec& Spec : GetActivatableAbilities())
+	{
+		if(Spec.DynamicAbilityTags.HasTagExact(Tag))
+		{
+			AbilitySpecInputPressed(Spec);
+			if(!Spec.IsActive())
+			{
+				return TryActivateAbility(Spec.Handle);
+			}
+		}
+	}
+	return false;
 }
 
 void UAuraAbilitySystemComponent::AbilityInputTagReleased(const FGameplayTag& Tag)
@@ -58,9 +84,10 @@ void UAuraAbilitySystemComponent::AbilityInputTagReleased(const FGameplayTag& Ta
 	if(!Tag.IsValid()) return;
 	for(FGameplayAbilitySpec& Spec : GetActivatableAbilities())
 	{  
-		if(Spec.DynamicAbilityTags.HasTagExact(Tag))
+		if(Spec.DynamicAbilityTags.HasTagExact(Tag) && Spec.IsActive())
 		{
 			AbilitySpecInputReleased(Spec);
+			InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputReleased, Spec.Handle, Spec.ActivationInfo.GetActivationPredictionKey());
 		}
 	}
 }
